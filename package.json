@@ -1,0 +1,8 @@
+{
+  "name": "mvc_typescript",
+  "version": "1.0.0",
+  "description": "A simple MVC website written in nodejs typescript",
+  "main": "app.js",
+  "author": "Gabrielle",
+  "license": "GNU General Public License v3.0"
+}
