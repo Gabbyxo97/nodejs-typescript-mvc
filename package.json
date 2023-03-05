@@ -6,7 +6,7 @@
   "author": "Gabrielle",
   "license": "GNU General Public License v3.0",
   "scripts": {
-    "prestart": "npx tsc",
+    "build": "npx tsc",
     "start": "node dist/main.js"
   },
   "dependencies": {
