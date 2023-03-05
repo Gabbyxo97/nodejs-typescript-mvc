@@ -1,8 +1,9 @@
 import { existsSync } from 'fs';
 import path from 'path';
 import App from './app';
-import HomeController from './controllers/home_controller';
+import HomeController from './controllers/HomeController';
 import dotenv from 'dotenv';
+import PostController from "./controllers/PostController";
 
 const envFilePath:string = path.join(process.cwd(), '.env');
 
@@ -14,6 +15,7 @@ if (!existsSync(envFilePath)) {
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 const app = new App([
-    new HomeController()
+    new HomeController(),
+    new PostController()
 ]);
 app.start();

@@ -1,5 +1,6 @@
 import express, {Express} from 'express';
 import path from 'path';
+import bodyParser from "body-parser";
 
 export default class App {
     private readonly app:Express;
@@ -8,6 +9,10 @@ export default class App {
         this.app = express();
         this.app.set('view engine', process.env.VIEW_ENGINE);
         this.app.set('views', path.join(process.cwd(), 'views', process.env.VIEW_ENGINE ?? ''));
+        this.app.use(express.static(path.join(process.cwd(), 'public')))
+        this.app.use(bodyParser.urlencoded({
+            extended: true
+        }));
 
         this.initializeControllers(controllers);
     }

@@ -1,0 +1,9 @@
+{% extends '../base.twig' %}
+
+{% block content %}
+    <form method="post">
+        {{ form.render() }}
+        <button type="submit">Save</button><br>
+        <a href="/posts">Cancel</a>
+    </form>
+{% endblock %}
