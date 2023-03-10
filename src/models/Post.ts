@@ -1,13 +1,21 @@
 export default class Post {
-    private _id:number = 0;
+    private _id:number|null = null;
     private _title:string = '';
     private _body:string = '';
 
-    get id(): number {
+    constructor(rowData: any = null) {
+        if (rowData != null) {
+            this._id = rowData.id;
+            this._title = rowData.title;
+            this._body = rowData.body;
+        }
+    }
+
+    get id(): number|null {
         return this._id;
     }
 
-    set id(id: number) {
+    set id(id: number|null) {
         this._id = id;
     }
 

@@ -3,7 +3,7 @@ import path from 'path';
 import App from './app';
 import HomeController from './controllers/HomeController';
 import dotenv from 'dotenv';
-import PostController from "./controllers/PostController";
+import PostController from './controllers/PostController';
 
 const envFilePath:string = path.join(process.cwd(), '.env');
 

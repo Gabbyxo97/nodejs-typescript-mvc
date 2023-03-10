@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 
 export default class App {
     private readonly app:Express;
-    
+
     constructor(controllers: any) {
         this.app = express();
         this.app.set('view engine', process.env.VIEW_ENGINE);
@@ -13,6 +13,9 @@ export default class App {
         this.app.use(bodyParser.urlencoded({
             extended: true
         }));
+
+        const database = require('./database/Database');
+        database.init();
 
         this.initializeControllers(controllers);
     }

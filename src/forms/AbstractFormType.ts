@@ -1,4 +1,4 @@
-import {FormFieldType} from "./FormFieldType";
+import {FormFieldType} from './FormFieldType';
 import forms, {FieldParameters, Form, widgets} from 'forms';
 import express from 'express';
 
