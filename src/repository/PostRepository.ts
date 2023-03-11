@@ -31,6 +31,10 @@ class PostRepository {
             return result.affectedRows;
         }
     }
+
+    public async delete(post: Post): Promise<void> {
+        await this._database.query('DELETE FROM posts WHERE id = ? LIMIT 1', [post.id]);
+    }
 }
 
 module.exports = new PostRepository();

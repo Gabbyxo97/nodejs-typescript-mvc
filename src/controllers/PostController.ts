@@ -14,6 +14,8 @@ export default class PostController {
         this._router.post(path.join(this._path, 'create'), this.create.bind(this));
         this._router.get(path.join(this._path, 'edit/:postId'), this.edit.bind(this));
         this._router.post(path.join(this._path, 'edit/:postId'), this.edit.bind(this));
+        this._router.get(path.join(this._path, 'delete/:postId'), this.delete.bind(this));
+        this._router.post(path.join(this._path, 'delete/:postId'), this.delete.bind(this));
     }
 
     async index(req: express.Request, res: express.Response) {
@@ -52,6 +54,21 @@ export default class PostController {
         }
 
         res.render('posts/save', {form: form});
+    }
+
+    async delete(req: express.Request, res: express.Response) {
+        const post = await this._postRepository.find(Number(req.params.postId));
+
+        if (post === null) {
+            return res.sendStatus(404);
+        }
+
+        if (req.method === 'POST') {
+            await this._postRepository.delete(post);
+            return res.redirect('/posts');
+        }
+
+        res.render('posts/delete', {post: post});
     }
 
     public get router(): express.Router {
