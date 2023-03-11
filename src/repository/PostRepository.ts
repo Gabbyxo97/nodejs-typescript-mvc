@@ -28,8 +28,7 @@ class PostRepository {
             return result.insertId;
         } else {
             const result = await this._database.query('UPDATE posts SET title = ?, body = ? WHERE id = ? LIMIT 1', [post.title, post.body, post.id]);
-            console.log(result);
-            return 0;
+            return result.affectedRows;
         }
     }
 }

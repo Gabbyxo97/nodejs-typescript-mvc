@@ -12,6 +12,8 @@ export default class PostController {
         this._router.get(this._path, this.index.bind(this));
         this._router.get(path.join(this._path, 'create'), this.create.bind(this));
         this._router.post(path.join(this._path, 'create'), this.create.bind(this));
+        this._router.get(path.join(this._path, 'edit/:postId'), this.edit.bind(this));
+        this._router.post(path.join(this._path, 'edit/:postId'), this.edit.bind(this));
     }
 
     async index(req: express.Request, res: express.Response) {
@@ -21,17 +23,35 @@ export default class PostController {
     }
 
     async create(req: express.Request, res: express.Response) {
-        const form = new PostFormType();
+        const form = new PostFormType(new Post());
         form.handle(req);
 
         if (form.submitted && form.valid) {
-            const post = new Post({'title': form.data.title, 'body': form.data.body});
-            await this._postRepository.save(post);
+            await this._postRepository.save(form.data);
             res.redirect('/posts');
             return;
         }
 
-        res.render('posts/create', {form: form});
+        res.render('posts/save', {form: form});
+    }
+
+    async edit(req: express.Request, res: express.Response) {
+        const post = await this._postRepository.find(Number(req.params.postId));
+
+        if (post === null) {
+            return res.sendStatus(404);
+        }
+
+        const form = new PostFormType(post);
+        form.handle(req);
+
+        if (form.submitted && form.valid) {
+            await this._postRepository.save(form.data);
+            res.redirect('/posts');
+            return;
+        }
+
+        res.render('posts/save', {form: form});
     }
 
     public get router(): express.Router {

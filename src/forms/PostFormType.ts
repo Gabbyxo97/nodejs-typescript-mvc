@@ -1,9 +1,10 @@
 import {FormFieldType} from './FormFieldType';
 import AbstractFormType from './AbstractFormType';
+import Post from "../models/Post";
 
 export default class PostFormType extends AbstractFormType {
-    constructor() {
-        super();
+    constructor(post: Post|null = null) {
+        super(post);
 
         super.addField('title', FormFieldType.Text, {
             required: true,

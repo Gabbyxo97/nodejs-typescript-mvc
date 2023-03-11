@@ -9,6 +9,10 @@ export default class AbstractFormType {
     private _submitted: boolean = false;
     private _valid: boolean = false;
 
+    constructor(data: any = null) {
+        this._data = data;
+    }
+
     protected addField(name: string, type: FormFieldType, options: FieldParameters) {
         const fields = forms.fields;
         let value: any;
@@ -27,6 +31,10 @@ export default class AbstractFormType {
                 break;
         }
 
+        if (this._data && this._data[name]) {
+            value.value = this._data[name];
+        }
+
         this.fields[name] = value;
     }
 
@@ -43,9 +51,34 @@ export default class AbstractFormType {
             return;
         }
 
+        const tempData = this._data;
+
         this.form.handle(req, {
-            success: (form: { data: any; }) => { this._valid = true; this.form = form; this._data = form.data },
-            error: (form: Form) => { this._valid = false; this.form = form }
+            success: (form: { data: any; }) => {
+                this._valid = true;
+                this.form = form;
+
+                if (this._data === null) {
+                    this._data = form.data;
+                } else {
+                    for (const name in form.data) {
+                        this._data[name] = form.data[name];
+                    }
+                }
+            },
+            error: (form: Form) => {
+                this._valid = false;
+                this.form = form;
+                this.form.data = tempData;
+
+                for (const name in tempData) {
+                    let field = this.form.fields[name.substring(1)];
+
+                    if (field) {
+                        field.value = tempData[name];
+                    }
+                }
+            }
         });
 
         this._submitted = true;

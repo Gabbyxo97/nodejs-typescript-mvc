@@ -1,6 +1,6 @@
 import express, {Express} from 'express';
 import path from 'path';
-import bodyParser from "body-parser";
+import bodyParser from 'body-parser';
 
 export default class App {
     private readonly app:Express;

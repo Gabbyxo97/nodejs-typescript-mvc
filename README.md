@@ -1,6 +1,5 @@
 # Simple MVC Website
 This project is started to learn more about nodejs, express.js and Typescript.\
-It's a simple template project for simple MVC websites\
 
 ## Tech stuff
 - Typescript
