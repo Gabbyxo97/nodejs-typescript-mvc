@@ -1,14 +1,11 @@
 import * as express from 'express';
+import {Controller, Get, Render} from 'routing-controllers';
 
+@Controller('/')
 export default class HomeController {
-    private path:string = '/';
-    public router:express.Router = express.Router();
-
-    constructor() {
-        this.router.get(this.path, this.index);
-    }
-
-    index(req: express.Request, res: express.Response) {
-        res.render('index');
+    @Get()
+    @Render('index.twig')
+    index() {
+        return {};
     }
 }

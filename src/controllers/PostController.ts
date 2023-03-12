@@ -1,40 +1,46 @@
 import * as express from 'express';
 import Post from '../models/Post';
-import path from 'path';
 import PostFormType from '../forms/PostFormType';
+const Tokens = require('csrf')();
+import {Controller, Get, Render, Post as PostRoute, Req, Res, Session} from 'routing-controllers';
 
+@Controller('/posts', {transformRequest: false, transformResponse: false})
 export default class PostController {
-    private _path:string = '/posts';
-    private _router:express.Router = express.Router();
     private _postRepository = require('../repository/PostRepository');
 
-    constructor() {
-        this._router.get(this._path, this.index.bind(this));
-        this._router.get(path.join(this._path, 'create'), this.create.bind(this));
-        this._router.post(path.join(this._path, 'create'), this.create.bind(this));
-        this._router.get(path.join(this._path, 'edit/:postId'), this.edit.bind(this));
-        this._router.post(path.join(this._path, 'edit/:postId'), this.edit.bind(this));
-        this._router.get(path.join(this._path, 'delete/:postId'), this.delete.bind(this));
-        this._router.post(path.join(this._path, 'delete/:postId'), this.delete.bind(this));
+    @Get()
+    @Render('posts/index.twig')
+    async index(@Session() session: any) {
+        const posts = await this._postRepository.findAll()
+        return {
+            'posts': posts
+        };
     }
 
-    async index(req: express.Request, res: express.Response) {
-        res.render('posts/index', {
-            'posts': await this._postRepository.findAll()
-        });
-    }
+    @Get('/create')
+    // @PostRoute('/create')
+    async create(@Session() session: any, @Req() req: express.Request, @Res() res: express.Response) {
 
-    async create(req: express.Request, res: express.Response) {
+        console.log(req.session);
+        console.log(session);
         const form = new PostFormType(new Post());
         form.handle(req);
 
-        if (form.submitted && form.valid) {
+        if (form.csrfError) {
+            res.redirect('/unauthorized');
+            return;
+        }
+
+        if (form.submitted && form.valid && !form.csrfError) {
             await this._postRepository.save(form.data);
             res.redirect('/posts');
             return;
         }
 
-        res.render('posts/save', {form: form});
+        const secret = await Tokens.secret();
+        session.csrf_token = Tokens.create(secret);
+
+        res.render('posts/save', {form: form, csrfToken: session.csrf_token});
     }
 
     async edit(req: express.Request, res: express.Response) {
@@ -69,9 +75,5 @@ export default class PostController {
         }
 
         res.render('posts/delete', {post: post});
-    }
-
-    public get router(): express.Router {
-        return this._router;
     }
 }

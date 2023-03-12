@@ -17,13 +17,14 @@
         </thead>
         <tbody>
         {% for post in posts %}
+            {{ dump(post) }}
             <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.body }}</td>
+                <td>{{ post.id() }}</td>
+                <td>{{ post._title }}</td>
+                <td>{{ post._body }}</td>
                 <td>
-                    <a href="posts/edit/{{ post.id }}">Edit</a>
-                    <a href="posts/delete/{{ post.id }}">Delete</a>
+                    <a href="posts/edit/{{ post._id }}">Edit</a>
+                    <a href="posts/delete/{{ post._id }}">Delete</a>
                 </td>
             </tr>
         {% endfor %}

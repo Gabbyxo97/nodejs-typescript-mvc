@@ -2,7 +2,11 @@
 
 {% block content %}
     <form method="post">
+        {% if form.csrfError %}
+            CSRF error
+        {% endif %}
         {{ form.render() }}
+        <input name="_csrf" value="{{ csrfToken }}" type="hidden">
         <button type="submit">Save</button><br>
         <a href="/posts">Cancel</a>
     </form>

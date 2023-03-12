@@ -8,6 +8,7 @@ export default class AbstractFormType {
     private _data: any;
     private _submitted: boolean = false;
     private _valid: boolean = false;
+    private _csrfError: boolean = false;
 
     constructor(data: any = null) {
         this._data = data;
@@ -49,6 +50,13 @@ export default class AbstractFormType {
     public handle(req: express.Request) {
         if (req.method !== 'POST') {
             return;
+        }
+
+        console.log(req.session.csrf_token);
+        console.log(req.body._csrf);
+
+        if (req.session.csrf_token !== req.body._csrf) {
+            this._csrfError = true;
         }
 
         const tempData = this._data;
@@ -94,5 +102,9 @@ export default class AbstractFormType {
 
     public get data(): any {
         return this._data;
+    }
+
+    public get csrfError(): boolean {
+        return this._csrfError;
     }
 }
